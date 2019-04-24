@@ -22,7 +22,7 @@ defer httpResp.Body.Close()
 
 ```
 
-Has documented [here](https://docs.dfuse.io/#rest-api-post-https-auth-dfuse-io-v1-auth-issue). The return payload is compose of a [JWT token](https://jwt.io) and the expiration timestamp.
+Has documented [here](https://docs.dfuse.io/#rest-api-post-https-auth-dfuse-io-v1-auth-issue). The return payload is composed of a [JWT token](https://jwt.io) and the expiration timestamp.
 ```json
 {
   "token": "eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTA2OTIxNzIsImp0aSI6IjQ0Y2UzMDVlLWMyN2QtNGIzZS1iN2ExLWVlM2NlNGUyMDE1MyIsImlhdCI6MTU1MDYwNTc3MiwiaXNzIjoiZGZ1c2UuaW8iLCJzdWIiOiJ1aWQ6bWRmdXNlMmY0YzU3OTFiOWE3MzE1IiwidGllciI6ImVvc3EtdjEiLCJvcmlnaW4iOiJlb3NxLmFwcCIsInN0YmxrIjotMzYwMCwidiI6MX0.k1Y66nqBS7S6aSt-zyt24lPFiNfWiLPbICc89kxoDvTdyDnLuUK7JxuGru9_PbPf89QBipdldRZ_ajTwlbT-KQ",
@@ -30,9 +30,9 @@ Has documented [here](https://docs.dfuse.io/#rest-api-post-https-auth-dfuse-io-v
 }
 ```
 ### When to refresh your JWT token
-Tokens have live span of 24h (that can vary) and need to be refresh before they expire. Please see [Lifecycle of short-lived JWTs](https://docs.dfuse.io/#authentication)
+Tokens have a life span of 24h (that can vary) and need to be refreshed before they expire. Please see [Lifecycle of short-lived JWTs](https://docs.dfuse.io/#authentication)
 
-https://auth.dfuse.io/v1/auth/issue endpoint is rate limited. Full documentation can be found here [API key types & Rate limiting](https://docs.dfuse.io/#authentication)
+https://auth.dfuse.io/v1/auth/issue endpoint is rated limited. Full documentation can be found here [API key types & Rate limiting](https://docs.dfuse.io/#authentication)
                                                                           
 
 ```go
@@ -125,7 +125,7 @@ Complete api documentation is accessible through [GraphiQL](https://mainnet.eos.
 - `lowBlockNum` parameter is the lower block num boundary, inclusively. A zero or negative value means a block relative to the head or last irreversible block (depending on irreversibleOnly).
 - `cursor` parameter is an opaque data piece that you can pass back to continue your search if it ever disconnected. Retrieve it from the cursor field in the responses of this call. It is safe to use the same cursor in BOTH directions (forward and backward).
 
-Cursors are part of each response stream from server and should always store on reception. When your process/server is restarted you should retrieve the last cursor received from server and use it in your next query. [See more](https://docs.dfuse.io/#searching-through-graphql)
+The cursors are part of each responses stream from server and should always store on reception. When your process/server is restarted, you should retrieve the last cursor received from server and use it in your next query. [See more](https://docs.dfuse.io/#searching-through-graphql)
    
 ```go
 ...
@@ -181,7 +181,7 @@ for {
     
     ...
     
-    //Analyse the proposal and send push notification to targeted end user
+    //Analyze the proposal and send push notification to targeted end user
     
 }
 
