@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"msignotify"
-	"msignotify/storage"
+
+	msignotify "github.com/dfuse-io/example-push-notifications"
+	"github.com/dfuse-io/example-push-notifications/storage"
 
 	"github.com/anachronistic/apns"
 )

@@ -1,4 +1,4 @@
-module msignotify
+module github.com/dfuse-io/example-push-notifications
 
 go 1.12
 

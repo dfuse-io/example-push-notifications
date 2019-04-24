@@ -8,8 +8,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	pbgraphql "msignotify/bp"
 	"net/http"
+
+	pbgraphql "github.com/dfuse-io/example-push-notifications/bp"
 
 	"google.golang.org/grpc/credentials"
 

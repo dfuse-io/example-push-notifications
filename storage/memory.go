@@ -1,6 +1,6 @@
 package storage
 
-import "msignotify"
+import msignotify "github.com/dfuse-io/example-push-notifications"
 
 type MemoryStorage struct {
 	devicesTokens map[string]*msignotify.DeviceToken
