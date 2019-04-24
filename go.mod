@@ -1,4 +1,4 @@
-module main
+module msignotify
 
 go 1.12
 

@@ -1,4 +1,4 @@
-package main
+package msignotify
 
 import (
 	"encoding/base64"

@@ -1,16 +1,17 @@
-package main
+package msignotify
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"google.golang.org/grpc/credentials"
 	"io"
 	"io/ioutil"
-	pbgraphql "main/bp"
+	pbgraphql "msignotify/bp"
 	"net/http"
 	"os"
+
+	"google.golang.org/grpc/credentials"
 
 	structpb "github.com/golang/protobuf/ptypes/struct"
 
@@ -52,13 +53,15 @@ type Server struct {
 	jwt         *JWT
 	oauth2Token *oauth2.Token
 	wsConn      *websocket.Conn
-	db          *Database
+	storage     Storage
+	graphQLAddr string
 }
 
-func NewServer(apiKey string, db *Database) *Server {
+func NewServer(apiKey string, graphQLAddr string, storage Storage) *Server {
 	return &Server{
-		apiKey: apiKey,
-		db:     db,
+		apiKey:      apiKey,
+		storage:     storage,
+		graphQLAddr: graphQLAddr,
 	}
 }
 
@@ -71,7 +74,7 @@ func init() {
 
 func (s *Server) Run(send chan Notification) error {
 
-	cursor := s.db.LoadCursor()
+	cursor := s.storage.LoadCursor()
 
 	authToken, err := s.RefreshToken()
 	if err != nil {
@@ -84,7 +87,7 @@ func (s *Server) Run(send chan Notification) error {
 	}
 
 	fmt.Println("setting connecting to server")
-	connection, err := grpc.Dial("kylin.eos.dfuse.io:443", opts...)
+	connection, err := grpc.Dial(s.graphQLAddr, opts...)
 
 	if err != nil {
 		return fmt.Errorf("run: grapheos connection connection: %s", err)
@@ -143,7 +146,7 @@ func (s *Server) Run(send chan Notification) error {
 
 		cursor := gjson.Get(response.Data, "data.searchTransactionsForward.cursor").Str
 		fmt.Println("Cursor:", cursor)
-		s.db.StoreCursor(cursor)
+		s.storage.StoreCursor(cursor)
 
 		rawProposal := gjson.Get(response.Data, "data.searchTransactionsForward.trace.matchingActions.0.json").Raw
 		proposal, err := NewProposal(rawProposal)
@@ -161,7 +164,7 @@ func (s *Server) Run(send chan Notification) error {
 		}
 
 		for _, account := range proposal.Requested {
-			deviceToken := s.db.FindDeviceToken(account.Actor)
+			deviceToken := s.storage.FindDeviceToken(account.Actor)
 			if deviceToken != nil {
 				fmt.Println("Sending notification to:", account.Actor)
 				send <- Notification{

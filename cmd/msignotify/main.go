@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"msignotify"
+	"msignotify/storage"
 
 	"github.com/anachronistic/apns"
 )
@@ -16,13 +18,13 @@ func main() {
 	if *certPath == "" || *keyPath == "" {
 		panic(fmt.Sprintf("Need both cert and key parameters, got: %s %s", *certPath, *keyPath))
 	}
-	send := make(chan Notification)
+	send := make(chan msignotify.Notification)
 
-	db := NewDatabase()
-	db.OptInDeviceToken("lelapinnoir2", "bbf082487c7236f65f4b17645596a31a3234a304cf5ac4db73a1b2c85a4d2445", IOS)
+	storage := storage.NewMemoryStorage()
+	storage.OptInDeviceToken("lelapinnoir2", "bbf082487c7236f65f4b17645596a31a3234a304cf5ac4db73a1b2c85a4d2445", msignotify.IOS)
 
 	go func() {
-		server := NewServer("server_88bb56ce30a09e547450d9dc84e55716", db)
+		server := msignotify.NewServer("server_88bb56ce30a09e547450d9dc84e55716", "kylin.eos.dfuse.io:443", storage)
 		if err := server.Run(send); err != nil {
 			panic(err)
 		}

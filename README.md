@@ -188,7 +188,7 @@ for {
 ```    
 ### Handling fork
 
-see [handling fork !!! Missing !!!!]()
+see [handling fork](http://docs.dfuse.io/#graphql-handling-fork)
 
 ```go
 ...
