@@ -3,13 +3,13 @@ package msignotify
 import (
 	"bytes"
 	"context"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	pbgraphql "msignotify/bp"
 	"net/http"
-	"os"
 
 	"google.golang.org/grpc/credentials"
 
@@ -20,7 +20,6 @@ import (
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/oauth"
-	"google.golang.org/grpc/grpclog"
 )
 
 type Proposal struct {
@@ -55,6 +54,7 @@ type Server struct {
 	wsConn      *websocket.Conn
 	storage     Storage
 	graphQLAddr string
+	certPool    *x509.CertPool
 }
 
 func NewServer(apiKey string, graphQLAddr string, storage Storage) *Server {
@@ -64,14 +64,9 @@ func NewServer(apiKey string, graphQLAddr string, storage Storage) *Server {
 		graphQLAddr: graphQLAddr,
 	}
 }
-
-var logg grpclog.LoggerV2
-
-func init() {
-	logg = grpclog.NewLoggerV2(os.Stdout, ioutil.Discard, ioutil.Discard)
-	grpclog.SetLoggerV2(logg)
+func (s *Server) SetCertPool(certPool *x509.CertPool) {
+	s.certPool = certPool
 }
-
 func (s *Server) Run(send chan Notification) error {
 
 	cursor := s.storage.LoadCursor()
@@ -82,7 +77,7 @@ func (s *Server) Run(send chan Notification) error {
 	}
 	credential := oauth.NewOauthAccess(authToken)
 	opts := []grpc.DialOption{
-		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, "")),
+		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(s.certPool, "")),
 		grpc.WithPerRPCCredentials(credential),
 	}
 
