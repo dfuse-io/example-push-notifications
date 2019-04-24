@@ -123,7 +123,7 @@ func (s *Server) Run(send chan Notification) error {
 		response, err := executionClient.Recv()
 		if err != nil {
 			if err != io.EOF {
-				fmt.Println("error receiving message from search stream client:", err)
+				return fmt.Errorf("receiving message from search stream client: %s", err)
 			}
 			fmt.Println("No more result available")
 			break
