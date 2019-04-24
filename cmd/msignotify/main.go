@@ -21,10 +21,10 @@ func main() {
 	send := make(chan msignotify.Notification)
 
 	storage := storage.NewMemoryStorage()
-	storage.OptInDeviceToken("lelapinnoir2", "bbf082487c7236f65f4b17645596a31a3234a304cf5ac4db73a1b2c85a4d2445", msignotify.IOS)
+	storage.OptInDeviceToken("YOU_EOS_ACCOUNT_HERE", "YOUR_DEVICE_TOKEN_HERE", msignotify.IOS)
 
 	go func() {
-		server := msignotify.NewServer("server_88bb56ce30a09e547450d9dc84e55716", "kylin.eos.dfuse.io:443", storage)
+		server := msignotify.NewServer("YOUR_API_KEY_HERE", "kylin.eos.dfuse.io:443", storage)
 		if err := server.Run(send); err != nil {
 			panic(err)
 		}
