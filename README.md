@@ -83,7 +83,7 @@ graphqlClient := pbgraphql.NewGraphQLClient(connection)
 ...
 ```
 ### GraphQL query
-- dfuse GraphQL documention can be found [here](!!!here is missing!!!)
+- dfuse GraphQL documention can be found [here](https://docs.dfuse.io/#graphql)
 - If you are not familiar with GraphQL. Take a look at [Introduction to GraphQL](https://graphql.org/learn/) 
 - To help you construct your query and access our api documentation you can use [GraphiQL](https://mainnet.eos.dfuse.io/graphiql/) _"A graphical interactive in-browser GraphQL IDE."_ 
 https://mainnet.eos.dfuse.io/graphiql/
