@@ -1,6 +1,6 @@
 # Get started with dfuse.io GraphQL API over gRPC
 
-## `Push notification example`
+## Push notification example
 
 ### Token Management
 First, head on to our self-service API management portal (https://app.dfuse.io), after signing up you will be able to create long-term API keys.
