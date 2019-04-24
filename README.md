@@ -125,7 +125,8 @@ Complete api documentation is accessible through [GraphiQL](https://mainnet.eos.
 - `lowBlockNum` parameter is the lower block num boundary, inclusively. A zero or negative value means a block relative to the head or last irreversible block (depending on irreversibleOnly).
 - `cursor` parameter is an opaque data piece that you can pass back to continue your search if it ever disconnected. Retrieve it from the cursor field in the responses of this call. It is safe to use the same cursor in BOTH directions (forward and backward).
 
-Cursors are part of each response stream from server and should always store on reception. When your process/server is restarted you should retrieve the last cursor received from server and use it in your next query.   
+Cursors are part of each response stream from server and should always store on reception. When your process/server is restarted you should retrieve the last cursor received from server and use it in your next query. [See more](https://docs.dfuse.io/#searching-through-graphql)
+   
 ```go
 ...
 
@@ -188,7 +189,7 @@ for {
 ```    
 ### Handling fork
 
-see [handling fork](http://docs.dfuse.io/#graphql-handling-fork)
+see [handling fork](https://docs.dfuse.io/#searching-through-graphql)
 
 ```go
 ...
