@@ -131,27 +131,27 @@ func (s *Server) Run(send chan Notification) error {
 		fmt.Println("Received response:", response.Data)
 
 		//Handling error from lib subscription
-		errObjects := gjson.Get(response.Data, "errors").Array()
-		if len(errObjects) > 0 {
 
-			for _, e := range errObjects {
-				fmt.Println("Error:", gjson.Get(e.Raw, "message"))
+		if len(response.Errors) > 0 {
+
+			for _, e := range response.Errors {
+				fmt.Println("Error:", e.Message)
 			}
 			return nil
 		}
 
-		cursor := gjson.Get(response.Data, "data.searchTransactionsForward.cursor").Str
+		cursor := gjson.Get(response.Data, "searchTransactionsForward.cursor").Str
 		fmt.Println("Cursor:", cursor)
 		s.storage.StoreCursor(cursor)
 
-		rawProposal := gjson.Get(response.Data, "data.searchTransactionsForward.trace.matchingActions.0.json").Raw
+		rawProposal := gjson.Get(response.Data, "searchTransactionsForward.trace.matchingActions.0.json").Raw
 		proposal, err := NewProposal(rawProposal)
 		if err != nil {
 			return fmt.Errorf("failed to init proposal: %s", err)
 		}
 		fmt.Println("Proposal name:", proposal.Name)
 
-		undo := gjson.Get(response.Data, "data.searchTransactionsForward.undo").Bool()
+		undo := gjson.Get(response.Data, "searchTransactionsForward.undo").Bool()
 		var message string
 		if !undo {
 			message = fmt.Sprintf("Please approve '%s' proposed by %s", proposal.Name, proposal.Proposer)
