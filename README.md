@@ -1,6 +1,6 @@
-# dfuse.io GraphQL API
+# Get started with dfuse.io GraphQL API over gRPC
 
-## Get started with a `Push notification example`
+## Push notification example
 
 ### Token Management
 First, head on to our self-service API management portal (https://app.dfuse.io), after signing up you will be able to create long-term API keys.
@@ -58,7 +58,7 @@ func (jwt JWT) NeedRefresh() bool {
 ```
 ### Getting the dfuse Graphql gRPC client
 - Take a look at gRPC [Go Quick Start](https://grpc.io/docs/quickstart/go.html)
-- You will need to retrive `graphql.proto` from [this location !!!MISSING!!!]()
+- You can retrieve `graphql.proto` running `curl -O http://mainnet.eos.dfuse.io/graphql/graphql.proto`
 - execute `protoc -I bp/ bp/graphql.proto --go_out=plugins=grpc:graphql`
 
 ### Initiating dfuse Graphql Server connection
@@ -83,7 +83,7 @@ graphqlClient := pbgraphql.NewGraphQLClient(connection)
 ...
 ```
 ### GraphQL query
-- dfuse GraphQL documention can be found [here](!!!here is missing!!!)
+- dfuse GraphQL documention can be found [here](https://docs.dfuse.io/#graphql)
 - If you are not familiar with GraphQL. Take a look at [Introduction to GraphQL](https://graphql.org/learn/) 
 - To help you construct your query and access our api documentation you can use [GraphiQL](https://mainnet.eos.dfuse.io/graphiql/) _"A graphical interactive in-browser GraphQL IDE."_ 
 https://mainnet.eos.dfuse.io/graphiql/
