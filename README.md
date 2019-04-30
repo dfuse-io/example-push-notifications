@@ -151,40 +151,34 @@ s.db.StoreCursor(cursor)
 ...
 
 for {
-    response, err := executionClient.Recv()
-    if err != nil {
-        if err != io.EOF {
-            fmt.Println("error receiving message from search stream client:", err)
-        }
-        fmt.Println("No more result available")
-        break
-    }
-    fmt.Println("Received response:", response.Data)
+		fmt.Println("Waiting for response")
+		response, err := executionClient.Recv()
+		if err != nil {
+			if err != io.EOF {
+				return fmt.Errorf("receiving message from search stream client: %s", err)
+			}
+			fmt.Println("No more result available")
+			break
+		}
+		fmt.Println("Received response:", response.Data)
 
-    lib
-    errObjects := gjson.Get(response.Data, "errors").Array()
-    if len(errObjects) > 0 {
+		//Handling error from lib subscription
 
-        for _, e := range errObjects {
-            fmt.Println("Error:", gjson.Get(e.Raw, "message"))
-        }
-        return nil
-    }
+		if len(response.Errors) > 0 {
 
-    cursor := gjson.Get(response.Data, "data.searchTransactionsForward.cursor").Str
-    fmt.Println("Cursor:", cursor)
-    s.db.StoreCursor(cursor)
+			for _, e := range response.Errors {
+				fmt.Println("Error:", e.Message)
+			}
+			return nil
+		}
 
-    undo := gjson.Get(response.Data, "data.searchTransactionsForward.undo").Bool()
+		cursor := gjson.Get(response.Data, "searchTransactionsForward.cursor").Str
+		fmt.Println("Cursor:", cursor)
+		s.storage.StoreCursor(cursor)
 
-    rawProposal := gjson.Get(response.Data, "data.searchTransactionsForward.trace.matchingActions.0.json").Raw
-    
     ...
-    
-    //Analyze the proposal and send push notification to targeted end user
-    
-}
 
+}
 ...
 ```    
 ### Handling fork
