@@ -12,6 +12,7 @@ import (
 
 var certPath = flag.String("cert", "", "TCP Listener addr for http")
 var keyPath = flag.String("key", "", "TCP Listener addr for gRPC")
+var apiKey = flag.String("api_key", "", "dfuse api key")
 
 func main() {
 
@@ -22,10 +23,10 @@ func main() {
 	send := make(chan msignotify.Notification)
 
 	storage := storage.NewMemoryStorage()
-	storage.OptInDeviceToken("YOU_EOS_ACCOUNT_HERE", "YOUR_DEVICE_TOKEN_HERE", msignotify.IOS)
+	storage.OptInDeviceToken("leslapinsdev", "BBF082487C7236F65F4B17645596A31A3234A304CF5AC4DB73A1B2C85A4D2445", msignotify.IOS)
 
 	go func() {
-		server := msignotify.NewServer("YOUR_API_KEY_HERE", "kylin.eos.dfuse.io:443", storage)
+		server := msignotify.NewServer(*apiKey, "dev1.api.dfuse.dev:443", storage)
 		if err := server.Run(send); err != nil {
 			panic(err)
 		}
@@ -36,20 +37,22 @@ func main() {
 	for {
 		notification := <-send
 
-		payload := apns.NewPayload()
-		payload.Alert = notification.Message
-		payload.Badge = 1
-		payload.Sound = "bingbong.aiff"
+		if notification.DeviceToken.DeviceType == msignotify.IOS {
+			payload := apns.NewPayload()
+			payload.Alert = notification.Message
+			payload.Badge = 1
+			payload.Sound = "bingbong.aiff"
 
-		pn := apns.NewPushNotification()
-		pn.DeviceToken = notification.DeviceToken
-		pn.AddPayload(payload)
+			pn := apns.NewPushNotification()
+			pn.DeviceToken = notification.DeviceToken.Token
+			pn.AddPayload(payload)
 
-		resp := apnsClient.Send(pn)
+			resp := apnsClient.Send(pn)
 
-		alert, _ := pn.PayloadString()
-		fmt.Println("  Alert:", alert)
-		fmt.Println("Success:", resp.Success)
-		fmt.Println("  Error:", resp.Error)
+			alert, _ := pn.PayloadString()
+			fmt.Println("  Alert:", alert)
+			fmt.Println("Success:", resp.Success)
+			fmt.Println("  Error:", resp.Error)
+		}
 	}
 }

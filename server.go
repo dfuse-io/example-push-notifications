@@ -33,7 +33,7 @@ type Proposal struct {
 }
 
 type Notification struct {
-	DeviceToken string
+	DeviceToken *DeviceToken
 	Message     string
 }
 
@@ -164,7 +164,7 @@ func (s *Server) Run(send chan Notification) error {
 			if deviceToken != nil {
 				fmt.Println("Sending notification to:", account.Actor)
 				send <- Notification{
-					DeviceToken: deviceToken.Token,
+					DeviceToken: deviceToken,
 					Message:     message,
 				}
 			} else {
