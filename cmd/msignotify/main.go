@@ -46,6 +46,7 @@ func main() {
 			pn := apns.NewPushNotification()
 			pn.DeviceToken = notification.DeviceToken.Token
 			pn.AddPayload(payload)
+			pn.Set("proposal", notification.Json)
 
 			resp := apnsClient.Send(pn)
 

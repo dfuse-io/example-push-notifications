@@ -35,6 +35,7 @@ type Proposal struct {
 type Notification struct {
 	DeviceToken *DeviceToken
 	Message     string
+	Json        interface{}
 }
 
 func NewProposal(rawJson string) (*Proposal, error) {
@@ -68,6 +69,7 @@ func NewServer(apiKey string, graphQLAddr string, storage Storage) *Server {
 func (s *Server) SetCertPool(certPool *x509.CertPool) {
 	s.certPool = certPool
 }
+
 func (s *Server) Run(send chan Notification) error {
 
 	cursor := s.storage.LoadCursor()
@@ -99,6 +101,7 @@ func (s *Server) Run(send chan Notification) error {
 			cursor
 			undo
 			trace {
+	          id
 			  matchingActions {
 				receiver
 				account
@@ -159,6 +162,12 @@ func (s *Server) Run(send chan Notification) error {
 			message = fmt.Sprintf("Proposal '%s' proposed by %s has been cancel", proposal.Name, proposal.Proposer)
 		}
 
+		var m map[string]interface{}
+		err = json.Unmarshal([]byte(rawProposal), &m)
+		if err != nil {
+			return fmt.Errorf("failed to unmarshall proposal: %s", err)
+		}
+
 		for _, account := range proposal.Requested {
 			deviceToken := s.storage.FindDeviceToken(account.Actor)
 			if deviceToken != nil {
@@ -166,6 +175,7 @@ func (s *Server) Run(send chan Notification) error {
 				send <- Notification{
 					DeviceToken: deviceToken,
 					Message:     message,
+					Json:        m,
 				}
 			} else {
 				fmt.Printf("Actor %s has not opt in for notification\n", account.Actor)
