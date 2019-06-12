@@ -13,7 +13,7 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-func (s *MemoryStorage) OptInDeviceToken(eosAccountName string, deviceToken string, deviceType int) {
+func (s *MemoryStorage) OptInDeviceToken(eosAccountName string, deviceToken string, deviceType string) {
 	s.devicesTokens[eosAccountName] = &msignotify.DeviceToken{DeviceType: deviceType, Token: deviceToken}
 }
 

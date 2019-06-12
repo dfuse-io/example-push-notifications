@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 
+	"github.com/dfuse-io/example-push-notifications/rest"
+
 	msignotify "github.com/dfuse-io/example-push-notifications"
 	"github.com/dfuse-io/example-push-notifications/storage"
 
@@ -23,7 +25,12 @@ func main() {
 	send := make(chan msignotify.Notification)
 
 	storage := storage.NewMemoryStorage()
-	storage.OptInDeviceToken("leslapinsdev", "BBF082487C7236F65F4B17645596A31A3234A304CF5AC4DB73A1B2C85A4D2445", msignotify.IOS)
+	//storage.OptInDeviceToken("leslapinsdev", "BBF082487C7236F65F4B17645596A31A3234A304CF5AC4DB73A1B2C85A4D2445", msignotify.IOS)
+
+	go func() {
+		restServer := rest.NewServer("0.0.0.0:8080", storage)
+		panic(restServer.Listen())
+	}()
 
 	go func() {
 		server := msignotify.NewServer(*apiKey, "dev1.api.dfuse.dev:443", storage)

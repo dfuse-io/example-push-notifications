@@ -1,11 +1,11 @@
 package msignotify
 
 const (
-	IOS = iota
-	ANDROID
+	IOS     = "ios"
+	ANDROID = "android"
 )
 
 type DeviceToken struct {
-	DeviceType int
+	DeviceType string
 	Token      string
 }
